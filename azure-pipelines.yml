@@ -1,0 +1,32 @@
+trigger:
+ - feature/*
+ - main
+
+pool: mission-devops
+variables:
+
+stages:
+  - stage: build
+    displayName: build
+    jobs:
+      - job: terraforminitplan
+        displayName: terraform init & plan job
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+  - stage: scanning
+    displayName: scanning
+    jobs:
+      - job: tfsecjob
+        displayName: tfsec scanning job
+        steps:
+                 
